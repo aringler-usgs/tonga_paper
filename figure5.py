@@ -49,7 +49,7 @@ for tr in st:
 NFFT=2**(math.ceil(math.log(st[0].stats.npts, 2)))
 
 
-lats, lons, amps, freqs = [], [], [], []
+lats, lons, amps, freqs, snrs = [], [], [], [], []
 for tr in st:
     f,p = periodogram(tr.data, fs=tr.stats.sampling_rate, nfft= NFFT, scaling='spectrum')
     p, f = p[1:], f[1:]
@@ -62,17 +62,38 @@ for tr in st:
     p = np.sqrt(p/(np.abs(resp)**2))*10**9
     # Now have p in nm/s/s switch f to mHz
     f *= 1000.
+    noise = p[(f>=3.0) & (f <=3.4)]
     p = p[(f >= mf) & (f <= Mf)]
     f = f[(f >= mf) & (f <= Mf)]
+    
+    snr = np.max(p)/np.max(noise)
+
+    snrs.append(snr)
     locs = inv.get_coordinates(tr.id, eve)
     lats.append(locs['latitude'])
     lons.append(locs['longitude'])
     amps.append(np.max(p))
     freqs.append(f[np.argmax(p)])
+    if tr.stats.station in ['PFO', 'ADK']:
+        print(tr.stats.station + ' ' + str(f[np.argmax(p)]))
 
+gfres = []
+gamps = []
+for freq,snr  in zip(freqs,snrs):
+    if snr >= 3:
+        gfres.append(freq)
+        gamps.append(amps)
+
+ptop = []
+for amp in amps:
+    if amp > 0.6:
+        ptop.append(amp)
+
+print('Number of stations:' + str(len(amps)) + ' % with high:' + str(len(gamps)/len(amps)))
+print(str(ptop))
 print('Here is the frequency:' + str(np.mean(freqs)) + ' ' + str(np.std(freqs)))
-
-
+print('Here is the frequency with high SNR:' + str(np.mean(gfres)) + ' ' + str(np.std(gfres)))
+print('Here is the amps:' + str(np.mean(amps)) + ' ' + str(np.std(amps)))
 fig = plt.figure(1, figsize=(12,6))
 for idx  in range(2):
     ax = fig.add_subplot(1,2,1+idx, projection = ccrs.Robinson())
@@ -81,6 +102,7 @@ for idx  in range(2):
     ax.set_global()
     ax.coastlines()
     ax.scatter(175.4, -20.5, c='r',marker='*',s= 200, transform=ccrs.Geodetic(), zorder=3, vmin=0., vmax=10)
+    ax.scatter(180-175.4, 20.5, c='k',marker='*',s= 200, transform=ccrs.Geodetic(), zorder=3, vmin=0., vmax=10)
     #ax.scatter(180-175.4, 20.5, c='k',marker='*',s= 200, transform=ccrs.Geodetic(), zorder=3, vmin=0., vmax=10)
     if idx ==0:
         var = amps
@@ -93,7 +115,11 @@ for idx  in range(2):
         lett = '(b)'
         minmax = [3.65,3.75]
     ax.set_title(lett, loc='left')
-    im = ax.scatter(lons, lats, c=var, s= 200, transform=ccrs.Geodetic(), zorder=3, alpha=0.5,vmin=minmax[0],vmax=minmax[1])
+    for lat, lon, cvar, snr in zip(lats, lons, var, snrs):
+        if snr >= 3:
+            im = ax.scatter(lon, lat, c=cvar, s= 200, transform=ccrs.Geodetic(), zorder=3, alpha=0.5,vmin=minmax[0],vmax=minmax[1], marker='o')
+        else:
+            im = ax.scatter(lon, lat, c=cvar, s= 50, transform=ccrs.Geodetic(), zorder=3, alpha=0.5,vmin=minmax[0],vmax=minmax[1], marker='s')
     cbar = plt.colorbar(im, orientation='horizontal')
     cbar.set_label(label) 
 #plt.savefig('Tonga_' + chan + '.png', format='PNG', dpi=400)

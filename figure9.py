@@ -37,13 +37,13 @@ eve = UTCDateTime('2022-01-15T04:14:00')
 mf, Mf = 2.0, 6
 hours = 26
 
-inv = client.get_stations(network='IU,IC,CU,II', station='MSVF', starttime=eve,
+inv = client.get_stations(network='IU,IC,CU,II,G', station='MSVF', starttime=eve,
                           endtime=eve + hours*60*60, level="response",
                           location='00', channel='LHZ,LDI')
 
 
 
-st = client.get_waveforms(network='IU,IC,CU,II', station='MSVF', location='00',
+st = client.get_waveforms(network='IU,IC,CU,II,G', station='MSVF', location='00',
                           channel='LHZ,LDI', starttime=eve,
                           endtime=eve + hours*60*60)
 
@@ -119,8 +119,13 @@ for idx, tr in enumerate(st):
 
     # Convert units to nm/s/s
     #p = np.sqrt(p)*10**9
-
-    
+    print(st)
+    if tr.stats.channel == 'LDI':
+        f2 = f*1000
+        temp = p[(f2>=3.6) & (f2 <= 3.8)]
+        temp2 =f2[(f2>=3.6) & (f2 <= 3.8)]
+        for pair in zip(temp,temp2):
+            print(pair)
     # Now have p in nm/s/s switch f to mHz
     f *= 1000.
     p = p[(f >= mf) & (f <= Mf)]
@@ -152,14 +157,14 @@ ax[0].plot([3.72, 3.72], [-1, 2], color='C4', alpha=0.7)
 ln = ln1 + ln2
 labs = [ls.get_label() for ls in ln]
 ax2.legend(ln, labs, loc=0, ncol=2)
-ax[0].text(3.68, 0.322, '$_0S_{28} - _0S_{29}$',
-           color='C1', alpha=0.7, ha='center')
-ax[0].text(4.40, 0.322, '$_0S_{36} - _0S_{37}$',
-           color='C2', alpha=0.7, ha='center')
-ax[0].text(3.63, 0.345, '$_0S_{28}$', color='C3',
-           alpha=0.7, ha='center')
-ax[0].text(3.82, 0.342, '$_0S_{29}$', color='C4',
-           alpha=0.7, ha='center')
+ax[0].text(3.68, 0.322+0.05, '$_0S_{28} - _0S_{29}$',
+           color='C1', alpha=0.7, ha='center', fontsize=22)
+ax[0].text(4.40, 0.322+0.05, '$_0S_{36} - _0S_{37}$',
+           color='C2', alpha=0.7, ha='center', fontsize=22)
+ax[0].text(3.63, 0.345+0.1, '$_0S_{28}$', color='C3',
+           alpha=0.7, ha='center', fontsize=22)
+ax[0].text(3.82, 0.342+0.1, '$_0S_{29}$', color='C4',
+           alpha=0.7, ha='center', fontsize=22)
 ax[0].text(1.62, 0.36, '(a)')
 ax[1].text(-2.5, 140, '(b)')
 ax[2].text(-2.5, 0.6, '(c)')

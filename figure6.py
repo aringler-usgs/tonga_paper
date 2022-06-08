@@ -23,21 +23,26 @@ mpl.rc('font',size=18)
 
 # network
 client = Client("IRIS")
-eve = UTCDateTime('2022-01-15T04:14:00')
-chan_code = "LDO,LDI"
+eve2 = UTCDateTime('2022-01-15T04:14:00')
+eve1 = UTCDateTime('1991-06-15T06:30:00')
+chan_code = "LHZ"
 
 
 
 mf, Mf= 3, 6
-hours = 26
+hours = 12
 
 
-inv = client.get_stations(network='IU,IC,CU,II', station='*', starttime=eve, 
-                endtime = eve + hours*60*60, level="response", location='00,31', channel=chan_code)
+inv = client.get_stations(network='IU,IC,CU,II', station='*', starttime=eve1, 
+                endtime = eve1 + hours*60*60, level="response", location='*', channel=chan_code)
 
 
-st = client.get_waveforms(network='IU,IC,CU,II', station='*', location='00,31', channel=chan_code, 
-            starttime=eve, endtime=eve + hours*60*60)
+st = client.get_waveforms(network='IU,IC,CU,II', station='*', location='*', channel=chan_code, 
+            starttime=eve1, endtime=eve1 + hours*60*60)
+
+for tr in st:
+    if tr.stats.station == 'COL':
+        st.remove(tr)
 
 st.merge(fill_value=0)
 st.detrend('linear')
@@ -53,61 +58,93 @@ for tr in st:
 
 NFFT=2**(math.ceil(math.log(st[0].stats.npts, 2)))
 
-fhand = open('PressureSNR.csv','w')
+
 
 for idx, tr in enumerate(st):
     
 
+    st2 = client.get_waveforms(network='IU,IC,CU,II', station=tr.stats.station, location='*', channel=chan_code, 
+            starttime=eve2, endtime=eve2 + hours*60*60)
+
+    st2.merge(fill_value=0)
+    st2.detrend('linear')
+    st2.detrend('constant')
+    inv2 = client.get_stations(network='IU,IC,CU,II', station=tr.stats.station, starttime=eve2, 
+                endtime = eve2 + hours*60*60, level="response", location='*', channel=chan_code)
+
     f,p = periodogram(tr.data, fs=tr.stats.sampling_rate, nfft= NFFT, scaling='spectrum')
     p, f = p[1:], f[1:]
     trid = tr.id
-    #inv_resp = inv.get_response(trid, tr.stats.starttime)
-    #resp, _ = inv_resp.get_evalresp_response(tr.stats.delta, NFFT, 'ACC')
-    #resp = resp[1:]
+    inv_resp = inv.get_response(trid, tr.stats.starttime)
+    resp, _ = inv_resp.get_evalresp_response(tr.stats.delta, NFFT, 'ACC')
+    resp = resp[1:]
     # Convert units to nm/s/s
-    p = np.sqrt(p)*10**9
-    #p = np.sqrt(p/(np.abs(resp)**2))*10**9
+
+    p = np.sqrt(p/(np.abs(resp)**2))*10**9
     # Now have p in nm/s/s switch f to mHz
     f *= 1000.
     p = p[(f >= mf) & (f <= Mf)]
     f = f[(f >= mf) & (f <= Mf)]
-    snr1 = np.max(p[(f >= 3.5) & (f <= 3.8)])/np.max(p[(f >= 4.0) & (f <= 4.3)])
-    snr2 = np.max(p[(f >= 4.3) & (f <= 4.6)])/np.max(p[(f >= 5.0) & (f <= 5.3)])
+    #p /= np.max(p)
+    
+    
+    st2 = client.get_waveforms(network='IU,IC,CU,II', station=tr.stats.station, location='00', channel=chan_code, 
+            starttime=eve2, endtime=eve2 + hours*60*60)
 
-    if 'MSVF' in trid:
-        print(trid)
-        print(snr1)
-        print(snr2)
-    if snr1 > 3:
-        print(snr1)
-        print(trid)
+    st2.merge(fill_value=0)
+    st2.detrend('linear')
+    st2.detrend('constant')
+    inv2 = client.get_stations(network='IU,IC,CU,II', station=tr.stats.station, starttime=eve2, 
+                endtime = eve2 + hours*60*60, level="response", location='00', channel=chan_code)
 
+    f2,p2 = periodogram(st2[0].data, fs=tr.stats.sampling_rate, nfft= NFFT, scaling='spectrum')
+    p2, f = p2[1:], f2[1:]
+    trid = st2[0].id
+    inv_resp = inv2.get_response(trid, st2[0].stats.starttime)
+    resp, _ = inv_resp.get_evalresp_response(st2[0].stats.delta, NFFT, 'ACC')
+    resp = resp[1:]
+    # Convert units to nm/s/s
 
-
-    fhand.write(trid + ', ' + str(snr1) + ', ' + str(snr2) + '\n')
-
+    p2 = np.sqrt(p2/(np.abs(resp)**2))*10**9
+    # Now have p in nm/s/s switch f to mHz
+    f *= 1000.
+    p2 = p2[(f >= mf) & (f <= Mf)]
+    f = f[(f >= mf) & (f <= Mf)]
+    #p /= np.max(p)
+    #val = np.max([np.max(p), np.max(p2)])
+    rat = np.max(p)/np.max(p2)
 
     p /= np.max(p)
-    ax[idx].plot(f,p, label=(tr.id).replace('.',' '), alpha=0.3, color='C0')
-    ax[idx].fill_between(f, 0, p, alpha=0.7, color='C0')
+    p2 /= np.max(p2)
+    ax[idx].plot(f,p,  color='C5')
+    ax[idx].fill_between(f, 0, p, color='C5')
     ax[idx].set_xlim((mf,Mf))
+
+
+    ax[idx].plot(f,p2, alpha=0.3, color='C0')
+    ax[idx].fill_between(f, 0, p2, alpha=0.7, color='C0')
+    ax[idx].set_xlim((mf,Mf))
+    ax[idx].text(5.75, 0.6, str(round(rat,3)))
+
     ax[idx].plot([3.68, 3.68], [-1,2],color='C1',alpha=0.7)
     ax[idx].plot([4.40, 4.40], [-1,2],color='C2',alpha=0.7)
     ax[idx].plot([3.63, 3.63], [-1,2],color='C3',alpha=0.7)
     ax[idx].plot([3.72, 3.72], [-1,2],color='C4',alpha=0.7)
     ax[idx].set_ylim((0,1.1))
     ax[idx].set_yticks([0.55])
-    ax[idx].set_yticklabels([tr.stats.station], fontsize=8)
+    ax[idx].set_yticklabels([tr.stats.station], fontsize=16)
 
     if idx < len(st)-1:
         ax[idx].set_xticks([])
 #ax.set_yticks([0.5])
-fhand.close()
 
-ax[0].text(3.68, 9, '$_0S_{28} - _0S_{29}$', color='C1', alpha=0.7, ha='center')
-ax[0].text(4.40, 3, '$_0S_{36} - _0S_{37}$', color='C2', alpha=0.7, ha='center')
-ax[0].text(3.63, 5, '$_0S_{28}$', color='C3', alpha=0.7, ha='center')
-ax[0].text(3.72, 3, '$_0S_{29}$', color='C4', alpha=0.7, ha='center')
+ax[0].text(3.68, 2.5, '$_0S_{28} - _0S_{29}$', color='C1', alpha=0.7, ha='center', fontsize=22)
+ax[0].text(4.40, 1.3, '$_0S_{36} - _0S_{37}$', color='C2', alpha=0.7, ha='center', fontsize=22)
+ax[0].text(3.63, 1.8, '$_0S_{28}$', color='C3', alpha=0.7, ha='center', fontsize=22)
+ax[0].text(3.72, 1.3, '$_0S_{29}$', color='C4', alpha=0.7, ha='center', fontsize=22)
+ax[0].plot([0,0],[1,1], color='C0', label='Honga Tonga', linewidth=4)
+ax[0].plot([0,0],[1,1], color='C5', label='Pinatubo', linewidth=4)
+ax[0].legend(ncol=2, loc=1,bbox_to_anchor=(1.0, 2.4))
 ax[idx].set_xlabel('Frequency ($mHz$)')
 plt.savefig('Figure6.PNG', format='PNG', dpi=400)
 plt.savefig('Figure6.PDF', format='PDF', dpi=400)

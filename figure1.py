@@ -61,16 +61,18 @@ ax.coastlines()
 ax.add_feature(cart.feature.LAND, zorder=2, edgecolor='k')
 ax.set_global()
 ax.coastlines()
-ax.scatter(175.4, -20.5, c='r',marker='*',s= 200, transform=ccrs.Geodetic(), zorder=3, vmin=0., vmax=10, label='Tonga Eruption')
+ax.scatter(175.4, -20.5, c='r',marker='*',s= 200, transform=ccrs.Geodetic(), zorder=3, vmin=0., vmax=10, label='Hunga Tonga Eruption')
 ax.scatter(180-175.4, 20.5, c='k',marker='*',s= 200, transform=ccrs.Geodetic(), zorder=3, vmin=0., vmax=10, label='Eruption Antipode')
 beenherepress = False
 beenhereseis = False
 beenheredata = False
+presscount = 0
 for trip in zip(lats, lons, press, hasdata):
     lat, lon, cpress, data = trip[0], trip[1], trip[2], trip[3]
     if data:
 
         if cpress:
+            presscount +=1
             if beenherepress:
                 ax.scatter(lon, lat, c='C0', s= 200, transform=ccrs.Geodetic(), zorder=3, alpha=0.5)
 
@@ -90,8 +92,8 @@ for trip in zip(lats, lons, press, hasdata):
         else:
             ax.scatter(lon, lat, c='C2', s = 200, transform=ccrs.Geodetic(), zorder=3, alpha=0.5, label='No Data')
             beenheredata = True
-fig.legend(ncol=5, fontsize=16, loc='lower center')
+fig.legend(ncol=5, fontsize=14, loc='lower center')
 plt.savefig('Figure1.PNG', format='PNG', dpi=400)
 plt.savefig('Figure1.PDF', format='PDF', dpi=400)
 
-
+print('Here are the pressure stations:' + str(presscount))

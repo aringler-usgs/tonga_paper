@@ -1,0 +1,195 @@
+#
+###################################################################################
+#
+B050F03     Station:     MSVF
+B050F16     Network:     II
+B052F03     Location:    10
+B052F04     Channel:     LHZ
+B052F22     Start date:  2016,291,00:00:00
+B052F23     End date:    No Ending Time
+#
+#                  +-----------------------------------+
+#                  |    Response (Poles and Zeros)     |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B053F03     Transfer function type:                B - Analog response, in Hz
+B053F04     Stage sequence number:                 1
+B053F05     Response in units lookup:              m/s - Velocity in Meters Per Second
+B053F06     Response out units lookup:             V - Volts
+B053F07     A0 normalization factor:               +6.27987E+03
+B053F08     Normalization frequency:               +5.00000E-02
+B053F09     Number of zeroes:                      5
+B053F14     Number of poles:                       7
+#              Complex zeroes:
+#              i  real          imag          real_error    imag_error
+B053F10-13     0  +0.00000E+00  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F10-13     1  +0.00000E+00  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F10-13     2  -1.43040E+01  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F10-13     3  -2.55410E+01  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F10-13     4  -4.93972E+02  +0.00000E+00  +0.00000E+00  +0.00000E+00
+#              Complex poles:
+#              i  real          imag          real_error    imag_error
+B053F15-18     0  -6.13004E-03  +5.82353E-03  +0.00000E+00  +0.00000E+00
+B053F15-18     1  -6.13004E-03  -5.82353E-03  +0.00000E+00  +0.00000E+00
+B053F15-18     2  -3.95262E+01  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F15-18     3  -1.59603E+01  +1.95207E+01  +0.00000E+00  +0.00000E+00
+B053F15-18     4  -1.59603E+01  -1.95207E+01  +0.00000E+00  +0.00000E+00
+B053F15-18     5  -1.06646E+02  +1.83412E+02  +0.00000E+00  +0.00000E+00
+B053F15-18     6  -1.06646E+02  -1.83412E+02  +0.00000E+00  +0.00000E+00
+#
+#                  +-----------------------------------+
+#                  |      Channel Sensitivity/Gain     |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B058F03     Stage sequence number:                 1
+B058F04     Sensitivity:                           +1.19563E+03
+B058F05     Frequency of sensitivity:              +5.00000E-02
+B058F06     Number of calibrations:                0
+#
+#                  +-----------------------------------+
+#                  |    Response (Poles and Zeros)     |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B053F03     Transfer function type:                B - Analog response, in Hz
+B053F04     Stage sequence number:                 2
+B053F05     Response in units lookup:              V - Volts
+B053F06     Response out units lookup:             V - Volts
+B053F07     A0 normalization factor:               +1.00000E+00
+B053F08     Normalization frequency:               +5.00000E-02
+B053F09     Number of zeroes:                      0
+B053F14     Number of poles:                       0
+#
+#                  +-----------------------------------+
+#                  |      Channel Sensitivity/Gain     |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B058F03     Stage sequence number:                 2
+B058F04     Sensitivity:                           +1.00000E+00
+B058F05     Frequency of sensitivity:              +5.00000E-02
+B058F06     Number of calibrations:                0
+#
+#                  +-----------------------------------+
+#                  |      Response (Coefficients)      |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B054F03     Transfer function type:                D
+B054F04     Stage sequence number:                 3
+B054F05     Response in units lookup:              V - Volts
+B054F06     Response out units lookup:             counts - Digital Counts
+B054F07     Number of numerators:                  0
+B054F10     Number of denominators:                0
+#
+#                  +-----------------------------------+
+#                  |            Decimation             |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B057F03     Stage sequence number:                  3
+B057F04     Input sample rate (HZ):                 1.0000E+00
+B057F05     Decimation factor:                      00001
+B057F06     Decimation offset:                      00000
+B057F07     Estimated delay (seconds):             +0.0000E+00
+B057F08     Correction applied (seconds):          +0.0000E+00
+#
+#                  +-----------------------------------+
+#                  |      Channel Sensitivity/Gain     |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B058F03     Stage sequence number:                 3
+B058F04     Sensitivity:                           +1.67184E+06
+B058F05     Frequency of sensitivity:              +0.00000E+00
+B058F06     Number of calibrations:                0
+#
+#                  +-----------------------------------+
+#                  |      Response (Coefficients)      |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B054F03     Transfer function type:                D
+B054F04     Stage sequence number:                 4
+B054F05     Response in units lookup:              counts - Digital Counts
+B054F06     Response out units lookup:             counts - Digital Counts
+B054F07     Number of numerators:                  31
+B054F10     Number of denominators:                0
+#              Numerator coefficients:
+#              i  coefficient   error
+B054F08-09     0  +1.21993E-16  +0.00000E+00
+B054F08-09     1  +3.16192E-10  +0.00000E+00
+B054F08-09     2  -4.31465E-08  +0.00000E+00
+B054F08-09     3  -5.63556E-07  +0.00000E+00
+B054F08-09     4  -1.26701E-04  +0.00000E+00
+B054F08-09     5  +3.65814E-03  +0.00000E+00
+B054F08-09     6  +1.67531E-04  +0.00000E+00
+B054F08-09     7  -5.40451E-03  +0.00000E+00
+B054F08-09     8  +1.27861E-02  +0.00000E+00
+B054F08-09     9  -1.80357E-02  +0.00000E+00
+B054F08-09    10  +1.47312E-02  +0.00000E+00
+B054F08-09    11  +3.22694E-03  +0.00000E+00
+B054F08-09    12  -3.85969E-02  +0.00000E+00
+B054F08-09    13  +8.88353E-02  +0.00000E+00
+B054F08-09    14  -1.48243E-01  +0.00000E+00
+B054F08-09    15  +2.17766E-01  +0.00000E+00
+B054F08-09    16  +8.09914E-01  +0.00000E+00
+B054F08-09    17  +1.24596E-01  +0.00000E+00
+B054F08-09    18  -1.23041E-01  +0.00000E+00
+B054F08-09    19  +8.89975E-02  +0.00000E+00
+B054F08-09    20  -4.85016E-02  +0.00000E+00
+B054F08-09    21  +1.42591E-02  +0.00000E+00
+B054F08-09    22  +6.89639E-03  +0.00000E+00
+B054F08-09    23  -1.44434E-02  +0.00000E+00
+B054F08-09    24  +1.24286E-02  +0.00000E+00
+B054F08-09    25  -6.56873E-03  +0.00000E+00
+B054F08-09    26  +1.52204E-03  +0.00000E+00
+B054F08-09    27  +3.14209E-03  +0.00000E+00
+B054F08-09    28  +3.65627E-05  +0.00000E+00
+B054F08-09    29  -2.15299E-06  +0.00000E+00
+B054F08-09    30  -2.59783E-07  +0.00000E+00
+#
+#                  +-----------------------------------+
+#                  |            Decimation             |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B057F03     Stage sequence number:                  4
+B057F04     Input sample rate (HZ):                 1.0000E+00
+B057F05     Decimation factor:                      00001
+B057F06     Decimation offset:                      00000
+B057F07     Estimated delay (seconds):             +1.5930E+01
+B057F08     Correction applied (seconds):          +1.5930E+01
+#
+#                  +-----------------------------------+
+#                  |      Channel Sensitivity/Gain     |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B058F03     Stage sequence number:                 4
+B058F04     Sensitivity:                           +1.00000E+00
+B058F05     Frequency of sensitivity:              +0.00000E+00
+B058F06     Number of calibrations:                0
+#
+#                  +-----------------------------------+
+#                  |      Channel Sensitivity/Gain     |
+#                  |        II  MSVF   10  LHZ         |
+#                  |    10/17/2016 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B058F03     Stage sequence number:                 0
+B058F04     Sensitivity:                           +1.97716E+09
+B058F05     Frequency of sensitivity:              +5.00000E-02
+B058F06     Number of calibrations:                0
